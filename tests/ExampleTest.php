@@ -2,7 +2,7 @@
 
 namespace Bambamboole\NotionApi\Tests;
 
-use Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class ExampleTest extends TestCase
 {
