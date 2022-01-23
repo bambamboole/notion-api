@@ -11,7 +11,7 @@ class FetchPageTest extends FeatureTestCase
 {
     public function testItCanFetchANotionPage(): void
     {
-        $apiClient = new ApiV3Client(new Client(),$_ENV['NOTION_TOKEN']);
+        $apiClient = new ApiV3Client($this->client, $_ENV['NOTION_TOKEN']);
 
         $page = $apiClient->getPage('27093cda5c1f428e9c3bdd030f7f16b5');
 

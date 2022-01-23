@@ -11,7 +11,9 @@ class Collection
         public readonly string $id,
         public readonly Paragraph $name,
         /** @var PropertyDeclaration[] */
-        public readonly array $schema
+        public readonly array $schema,
+        /** @var CollectionEntry[] */
+        public readonly array $entries
     )
     {
     }

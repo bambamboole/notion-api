@@ -42,13 +42,7 @@ class ApiV3Client
 
         $response = $this->sendRequest(V3ResourceType::LOAD_PAGE_CHUNK, $body);
 
-        $responseBody = $response->getBody()->getContents();
-        $fileName = dirname(__DIR__, 2) . '/tests/fixtures/responses/' . $id . '.json';
-        if (!file_exists($fileName)) {
-            file_put_contents($fileName, $responseBody);
-        }
-
-        return $this->pageFactory->createFromResponsePayload($responseBody);
+        return $this->pageFactory->createFromResponsePayload($response->getBody()->getContents());
     }
 
     public function getCollection(string $id): Collection
@@ -89,13 +83,7 @@ class ApiV3Client
 
         $response = $this->sendRequest(V3ResourceType::QUERY_COLLECTION, $body);
 
-        $responseBody = $response->getBody()->getContents();
-        $fileName = dirname(__DIR__, 2) . '/tests/fixtures/responses/table_' . $id . '.json';
-        if (!file_exists($fileName)) {
-            file_put_contents($fileName, $responseBody);
-        }
-
-        return $this->collectionFactory->createFromResponsePayload($responseBody);
+        return $this->collectionFactory->createFromResponsePayload($response->getBody()->getContents());
     }
 
     public function sendRequest(V3ResourceType $resourceType, array $body): Response
