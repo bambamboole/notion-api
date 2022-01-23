@@ -31,10 +31,7 @@ jobs:
                   echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
             - name: Install dependencies
               run: composer update --${{ matrix.stability }} --prefer-dist --no-interaction
-            -   name: Create .env
-                run: |
-                    cat > .env << ENDOFFILE
-                    NOTION_TOKEN=${{ secrets.NOTION_TOKEN }}
-                    ENDOFFILE
             - name: Execute tests
+              env:
+                  NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
               run: vendor/bin/phpunit
