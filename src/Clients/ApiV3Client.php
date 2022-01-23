@@ -1,6 +1,6 @@
 <?php
 
-namespace Bambamboole\NotionApi;
+namespace Bambamboole\NotionApi\Clients;
 
 use Bambamboole\NotionApi\Enums\ResourceType;
 use Bambamboole\NotionApi\Factories\PageFactory;
@@ -10,7 +10,12 @@ use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Psr7\Response;
 use Ramsey\Uuid\Uuid;
 
-class ApiClient
+/**
+ * This client uses the private v3 Notion API, so please use at
+ * your own risk. The token can be taken from the `token_v2`
+ * cookie value while logged in to notion website
+ */
+class ApiV3Client
 {
     private const BASE_URL = 'https://www.notion.so/api/v3/';
 

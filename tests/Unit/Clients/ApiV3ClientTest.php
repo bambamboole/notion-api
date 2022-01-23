@@ -1,15 +1,15 @@
 <?php
 
-namespace Bambamboole\NotionApi\Tests\Unit;
+namespace Bambamboole\NotionApi\Tests\Unit\Clients;
 
-use Bambamboole\NotionApi\ApiClient;
+use Bambamboole\NotionApi\Clients\ApiV3Client;
 use Bambamboole\NotionApi\Enums\ResourceType;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 
-class ApiClientTest extends TestCase
+class ApiV3ClientTest extends TestCase
 {
     public function testItAutomaticallySetsTheAuthenticationCookie(): void
     {
@@ -25,7 +25,7 @@ class ApiClientTest extends TestCase
                 )
             )
             ->willReturn(new Response());
-        $client = new ApiClient($clientMock, 'test_token');
+        $client = new ApiV3Client($clientMock, 'test_token');
 
         $client->sendRequest(ResourceType::LOAD_PAGE_CHUNK, []);
     }
