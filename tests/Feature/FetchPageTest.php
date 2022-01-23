@@ -9,14 +9,6 @@ use GuzzleHttp\Client;
 
 class FetchPageTest extends FeatureTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-        if (!isset($_ENV['NOTION_TOKEN'])){
-            $this->markTestSkipped('Notion token needed for feature tests');
-        }
-    }
-
     public function testItCanFetchANotionPage(): void
     {
         $apiClient = new ApiV3Client(new Client(),$_ENV['NOTION_TOKEN']);

@@ -19,5 +19,9 @@ class FeatureTestCase extends TestCase
             $repository,
             dirname(__DIR__)
         )->safeLoad();
+
+        if (!isset($_ENV['NOTION_TOKEN'])){
+            $this->markTestSkipped('Notion token needed for feature tests');
+        }
     }
 }
