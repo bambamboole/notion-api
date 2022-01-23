@@ -3,7 +3,7 @@
 namespace Bambamboole\NotionApi\Factories;
 
 use Bambamboole\NotionApi\Models\Blocks\Block;
-use Bambamboole\NotionApi\Models\Blocks\GenericBlock;
+use Bambamboole\NotionApi\Models\Blocks\NotSupportedBlock;
 use Bambamboole\NotionApi\Models\Blocks\TextBlock;
 
 class BlockFactory
@@ -25,8 +25,8 @@ class BlockFactory
         return new TextBlock($this->paragraphFactory->createFromPayload($data['value']['properties']['title'] ?? []));
     }
 
-    private function createGenericBlock(array $data): GenericBlock
+    private function createGenericBlock(array $data): NotSupportedBlock
     {
-        return new GenericBlock($data);
+        return new NotSupportedBlock($data);
     }
 }
