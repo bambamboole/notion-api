@@ -22,6 +22,6 @@ class PageFactory
         $title = $this->paragraphFactory->createFromPayload($pageDetails['value']['properties']['title'] ?? []);
         $blocks = array_map(fn (array $rawBLock) => $this->blockFactory->createFromPayload($rawBLock), $rawBlocks);
 
-        return new Page($title, $blocks);
+        return new Page($title, $blocks, $data);
     }
 }

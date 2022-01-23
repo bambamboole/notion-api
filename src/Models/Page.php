@@ -11,6 +11,7 @@ class Page
         public readonly Paragraph $title,
         /** @var Block[] */
         public readonly array $blocks,
+        public readonly array $rawPageData
     )
     {
     }
