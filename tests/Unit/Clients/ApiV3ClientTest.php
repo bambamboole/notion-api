@@ -3,7 +3,7 @@
 namespace Bambamboole\NotionApi\Tests\Unit\Clients;
 
 use Bambamboole\NotionApi\Clients\ApiV3Client;
-use Bambamboole\NotionApi\Enums\ResourceType;
+use Bambamboole\NotionApi\Enums\V3ResourceType;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Psr7\Response;
@@ -27,6 +27,6 @@ class ApiV3ClientTest extends TestCase
             ->willReturn(new Response());
         $client = new ApiV3Client($clientMock, 'test_token');
 
-        $client->sendRequest(ResourceType::LOAD_PAGE_CHUNK, []);
+        $client->sendRequest(V3ResourceType::LOAD_PAGE_CHUNK, []);
     }
 }

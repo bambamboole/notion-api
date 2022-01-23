@@ -2,8 +2,10 @@
 
 namespace Bambamboole\NotionApi\Clients;
 
-use Bambamboole\NotionApi\Enums\ResourceType;
+use Bambamboole\NotionApi\Enums\V3ResourceType;
+use Bambamboole\NotionApi\Factories\CollectionFactory;
 use Bambamboole\NotionApi\Factories\PageFactory;
+use Bambamboole\NotionApi\Models\Collection;
 use Bambamboole\NotionApi\Models\Page;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Cookie\CookieJar;
@@ -20,9 +22,10 @@ class ApiV3Client
     private const BASE_URL = 'https://www.notion.so/api/v3/';
 
     public function __construct(
-        private ClientInterface $client,
-        private string $token,
-        private PageFactory $pageFactory = new PageFactory()
+        private ClientInterface   $client,
+        private string            $token,
+        private PageFactory       $pageFactory = new PageFactory(),
+        private CollectionFactory $collectionFactory = new CollectionFactory(),
     )
     {
     }
@@ -37,12 +40,65 @@ class ApiV3Client
             'verticalColumns' => false,
         ];
 
-        $response = $this->sendRequest(ResourceType::LOAD_PAGE_CHUNK, $body);
+        $response = $this->sendRequest(V3ResourceType::LOAD_PAGE_CHUNK, $body);
 
-        return $this->pageFactory->createFromResponsePayload($response->getBody()->getContents());
+        $responseBody = $response->getBody()->getContents();
+        $fileName = dirname(__DIR__, 2) . '/tests/fixtures/responses/' . $id . '.json';
+        if (!file_exists($fileName)) {
+            file_put_contents($fileName, $responseBody);
+        }
+
+        return $this->pageFactory->createFromResponsePayload($responseBody);
     }
 
-    public function sendRequest(ResourceType $resourceType,array $body): Response
+    public function getCollection(string $id): Collection
+    {
+        $page = $this->getPage($id);
+        if (!isset($page->rawPageData['recordMap']['collection'])
+            || !isset($page->rawPageData['recordMap']['collection_view'])) {
+            throw new \InvalidArgumentException("Page with id {$id} does not have a table");
+        }
+
+        $body = [
+            'collection' => [
+                'id' => array_key_first($page->rawPageData['recordMap']['collection'])
+            ],
+            'collectionView' => [
+                'id' => array_key_first($page->rawPageData['recordMap']['collection_view'])
+            ],
+            'loader' => [
+                'type' => 'reducer',
+                'reducers' => [
+                    'collection_group_results' => [
+                        'type' => 'results',
+                        'limit' => 999,
+                        'loadContentCover' => true
+                    ],
+                    'table:uncategorized:title:count' => [
+                        'type' => 'aggregation',
+                        'aggregation' => [
+                            'property' => 'title',
+                            'aggregator' => 'count'
+                        ]
+                    ]
+                ],
+                'searchQuery' => '',
+                'userTimeZone' => 'Europe/Berlin'
+            ]
+        ];
+
+        $response = $this->sendRequest(V3ResourceType::QUERY_COLLECTION, $body);
+
+        $responseBody = $response->getBody()->getContents();
+        $fileName = dirname(__DIR__, 2) . '/tests/fixtures/responses/table_' . $id . '.json';
+        if (!file_exists($fileName)) {
+            file_put_contents($fileName, $responseBody);
+        }
+
+        return $this->collectionFactory->createFromResponsePayload($responseBody);
+    }
+
+    public function sendRequest(V3ResourceType $resourceType, array $body): Response
     {
         return $this->client->request(
             'POST',
